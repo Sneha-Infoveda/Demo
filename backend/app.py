@@ -16,7 +16,8 @@ client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return jsonify({"message": "Welcome to ChatVeda AI Backend!"})
+
 
 
 
@@ -182,20 +183,6 @@ def add_files():
     )
 
     return jsonify({"message": "Files added successfully", "vector_store_id": updated_vector_store.id})
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-from flask import Flask, request, jsonify
-
-app = Flask(__name__)
-
-@app.route('/chat', methods=['POST'])
-def chat():
-    data = request.json
-    question = data.get("query")
-    response = f"You asked: {question}. This is a sample response!"
-    return jsonify({"answer": response})
 
 if __name__ == '__main__':
     app.run(debug=True)

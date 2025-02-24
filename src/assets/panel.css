@@ -36,7 +36,7 @@
 
 /* Logo Styling */
 .logo {
-    width: 290px; /* Adjust the width for a rectangular shape */
+    width: 200px; /* Adjust the width for a rectangular shape */
     /* height: auto; /* Ensures proportional scaling */
     /* max-height: 80px; Controls the height */ 
     object-fit: contain; /* Ensures the whole logo fits inside */
@@ -100,17 +100,20 @@
 /* Initially hide the whole side panel */
 /* Side Panel (Entire Panel) */
 .side-panel {
+    width: 0; /* Start closed */
+    overflow: hidden;
+    transition: width 0.3s ease-in-out;
     position: fixed;
+    left: 0;
     top: 0;
-    left: -220px; /* Hidden by default */
-    width: 250px;
-    height: 100vh;
-    background: white;
+    height: 100%;
+    background-color: #f8f9fa;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-    transition: left 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;  /* 🚀 This removes the scrollbar from the entire panel */
+    padding: 20px;
+}
+
+.side-panel.open {
+    width: 250px; /* Opened width */
 }
 
 /* Sidebar (Inside the Panel) */
@@ -143,9 +146,9 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
-    outline: none;
-    padding: 10px;
-    color: black;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 
  .icons {

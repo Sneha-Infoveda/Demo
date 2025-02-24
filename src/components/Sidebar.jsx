@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 
-const Sidebar = () => {
+const Sidebar = ({setQuery}) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const togglePanel = () => setIsOpen(!isOpen);
+    // Function to toggle sidebar state
+    const togglePanel = () => {
+        setIsOpen(!isOpen);
+    };
 
     const questions = [
         "What are the four Vedas?",
@@ -25,12 +28,15 @@ const Sidebar = () => {
     return (
         <div className={`side-panel ${isOpen ? 'open' : ''}`}>
             <div className="icons">
-                <img src="/static/imag/logocropped.jpg" alt="ChatVeda AI Logo" className="logo" />
+                <img src="/logocropped.jpg" alt="ChatVeda AI Logo" className="logo" />
                 <button className="toggle-btn" onClick={togglePanel}>☰</button>
             </div>
+
             <ul className="conversation-list">
                 {questions.map((question, index) => (
-                    <li key={index}>{question}</li>
+                    <li key={index} onClick={() => setQuery(question)}> {/* Click sets query */}
+                    {question}
+                </li>
                 ))}
             </ul>
         </div>

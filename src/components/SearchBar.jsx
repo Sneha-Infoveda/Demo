@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
-const SearchBar = () => {
-    const [query, setQuery] = useState("");
+const SearchBar = ({query, setQuery}) => {
 
-    const handleSearch = () => {
+    const handleSearch = async () => {
         console.log("User asked:", query);
         // You can send this query to Flask API here
     };
@@ -16,6 +15,7 @@ const SearchBar = () => {
                 onChange={(e) => setQuery(e.target.value)} 
                 placeholder="Ask ChatVeda"
             />
+            
             <div className="icons">
                 <button onClick={handleSearch}><i className="fas fa-search"></i></button>
                 <button><i className="fas fa-paperclip"></i></button>
