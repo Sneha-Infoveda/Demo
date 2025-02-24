@@ -1,0 +1,76 @@
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    height: 70vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 12px;
+    word-wrap: break-word;
+}
+
+/* User messages (Right aligned, Blue) */
+.chat-message.user {
+    align-self: flex-end;
+    background-color: #007bff;
+    color: white;
+    text-align: right;
+}
+
+/* Bot messages (Left aligned, Gray) */
+.chat-message.bot {
+    align-self: flex-start;
+    background-color: #e9ecef;
+    color: black;
+    text-align: left;
+}
+
+/* Message Bubble */
+.message-bubble {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 100%;
+}
+
+/* Follow-up question buttons */
+.followup-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.followup-questions button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.followup-questions button:hover {
+    background-color: #495057;
+}
+
+/* Smooth scrolling */
+.chat-container::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 5px;
+}

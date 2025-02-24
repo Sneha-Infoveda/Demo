@@ -4,7 +4,7 @@ import os
 import re
 import ast
 from openai import OpenAI
-# import markdown
+import markdown
 from flask_cors import CORS  # Allows cross-origin requests from React
 
 app = Flask(__name__)
