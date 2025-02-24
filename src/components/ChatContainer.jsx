@@ -12,17 +12,19 @@ const ChatContainer = ({ chatHistory, setQuery }) => {
         }
     }, [chatHistory]);
 
+    // Hide chat container if no messages
+    if (chatHistory.length === 0) return null;
+
     return (
         <div className="chat-container">
             {chatHistory.map((chat, index) => (
                 <div key={index} className={`chat-message ${chat.isUser ? 'user' : 'bot'}`}>
-                    <p className="message-text">{chat.isUser ? "You: " : "ChatVeda: "}</p>
                     <div className="message-bubble">
-                        <ReactMarkdown>{chat.response}</ReactMarkdown>
+                        <ReactMarkdown>{chat.text}</ReactMarkdown>
                     </div>
 
-                    {/* Display follow-up questions as buttons */}
-                    {chat.followUpQuestions.length > 0 && (
+                    {/* Display follow-up questions only for bot responses */}
+                    {!chat.isUser && chat.followUpQuestions?.length > 0 && (
                         <div className="followup-questions">
                             {chat.followUpQuestions.map((q, i) => (
                                 <button key={i} onClick={() => setQuery(q)}>
