@@ -8,6 +8,12 @@ const SearchBar = ({ query, setQuery, setChatHistory }) => {
         if (!query.trim()) return; // Prevent empty requests
         setLoading(true);
 
+        // Add user message to chat history
+        setChatHistory(prevChat => [
+            ...prevChat,
+            { text: query, isUser: true } // User message
+        ]);
+
         try {
             const res = await fetch("http://127.0.0.1:5000/get_answer", {
                 method: "POST",
@@ -16,11 +22,11 @@ const SearchBar = ({ query, setQuery, setChatHistory }) => {
             });
 
             const data = await res.json();
-            
+
+            // Add bot response to chat history
             setChatHistory(prevChat => [
                 ...prevChat,
-                { question: query, response: data.response, followUpQuestions: data.follow_up_questions || [], isUser: true },
-                { response: data.response, followUpQuestions: data.follow_up_questions || [], isUser: false }
+                { text: data.response, isUser: false, followUpQuestions: data.follow_up_questions || [] }
             ]);
 
             setQuery(""); // Clear input field after sending
