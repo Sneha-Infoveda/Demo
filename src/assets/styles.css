@@ -494,28 +494,20 @@ header {
     z-index: 1000;
 }
 
-/*code for followup question*/
-.follow-up-container {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+
+
+.welcome-message {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #444;
+    /* background-color: #f8f9fa; */
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
 }
 
-.follow-up-btn {
-    padding: 8px 12px;
-    border-radius: 5px;
-    background: #f0f0f0;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    transition: background-color 0.3s;
-}
-
-.follow-up-btn:hover {
-    background-color: #555;
-    color: white;
-}
-
-.follow-up-btn:active {
-    transform: scale(0.95);
-}

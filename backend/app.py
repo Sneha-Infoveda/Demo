@@ -62,7 +62,10 @@ def format_text(response_text):
     # Convert markdown to HTML
     html_output = markdown.markdown(response_text)
 
-    return html_output
+    """ Remove unwanted markdown or formatting from the response """
+    text = re.sub(r"```[a-zA-Z]*", "", html_output)  # Remove markdown-style code block indicators
+    text = text.strip()  # Remove leading/trailing spaces
+    return text
 
 @app.route('/get_answer_mock', methods=['POST'])
 def get_mock_response():
