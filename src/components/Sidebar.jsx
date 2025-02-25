@@ -1,13 +1,8 @@
-import React, { useState } from 'react';
+// Sidebar.jsx
+import React from 'react';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-const Sidebar = ({setQuery}) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    // Function to toggle sidebar state
-    const togglePanel = () => {
-        setIsOpen(!isOpen);
-    };
-
+const Sidebar = ({ setQuery, isOpen, setIsOpen }) => {
     const questions = [
         "What are the four Vedas?",
         "Dharma, Karma and Moksha?",
@@ -26,19 +21,28 @@ const Sidebar = ({setQuery}) => {
     ];
 
     return (
-        <div className={`side-panel ${isOpen ? 'open' : ''}`}>
-            <div className="icons">
-                <img src="/logocropped.jpg" alt="ChatVeda AI Logo" className="logo" />
-                <button className="toggle-btn" onClick={togglePanel}>☰</button>
+        <div className={`side-panel ${isOpen ? 'open' : 'closed'}`}>
+            <div className="toggle-button" onClick={() => setIsOpen(!isOpen)}>
+                {isOpen ? <FiChevronLeft /> : <FiChevronRight />}
             </div>
 
-            <ul className="conversation-list">
-                {questions.map((question, index) => (
-                    <li key={index} onClick={() => setQuery(question)}> {/* Click sets query */}
-                    {question}
-                </li>
-                ))}
-            </ul>
+            <div className="logo-container">
+                {isOpen && <h2 className="chatveda-text">ChatVeda AI</h2>}
+            </div>
+
+            {isOpen && (
+                <ul className="conversation-list">
+                    {questions.map((question, index) => (
+                        <li 
+                            key={index} 
+                            onClick={() => setQuery(question)}
+                            className="clickable-item"
+                        >
+                            {question}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };

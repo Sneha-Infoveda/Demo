@@ -433,46 +433,6 @@ header {
 
 
 
-.nav-menu {
-    list-style: none;
-    display: flex;
-    gap: 300px;
-}
-
-.nav-item {
-    position: relative;
-}
-
-.nav-button {
- 
-    color: #1b1a1a;
-    border: none;
-    padding: 8px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    list-style: none;
-    padding: 10px;
-    min-width: 150px;
-}
-
-.dropdown li {
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.dropdown li:hover {
-    background: #f0f0f0;
-}
 
 .main-content {
     margin-left: 250px; /* Match the sidebar width */
@@ -480,19 +440,92 @@ header {
     width: calc(100% - 250px);
 }
 
+/* Navbar Container */
+/* Navbar Container */
 .navbar {
- 
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px 20px;
-  
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: fixed;
     top: 0;
-    left: 300px; /* Match the sidebar width */
-    width: calc(100% - 250px);
+    left: 0;
     z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
+/* Logo Styling */
+.navbar-logo img {
+    max-height: 50px;
+    width: auto;
+    margin-right: 20px;
+}
+
+/* Menu Container */
+.nav-menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    margin-top: -80px;
+    top: 50px;
+}
+
+/* Dropdown Button */
+.nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    padding: 5px 10px;
+    position: relative;
+    transition: color 0.3s ease;
+    left: 70px;
+}
+
+.nav-button:hover {
+    color: #007bff;
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 10px;
+    display: none;
+    min-width: 160px;
+    z-index: 10;
+}
+
+.nav-item:hover .dropdown {
+    display: block;
+}
+
+.dropdown button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    padding: 5px 10px;
+    color: #333;
+}
+
+.dropdown button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Responsive Design */
+
 
 
 
