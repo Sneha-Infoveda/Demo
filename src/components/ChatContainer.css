@@ -1,24 +1,42 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .chat-container {
     display: flex;
     flex-direction: column;
-    max-width: 600px;
-    margin: auto;
+    width: 100%; /* Full width */
+    max-width: 1200px; /* Ensures it stretches */
+    margin: 0 auto; /* Center properly */
     padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
     height: 70vh;
     overflow-y: auto;
     scrollbar-width: thin;
+
+    /* REMOVE BACKGROUND, BORDERS & SHADOWS */
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0px !important;
 }
 
+/* Fix Chat Messages */
 .chat-message {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     max-width: 75%;
     margin: 5px;
     padding: 10px;
     border-radius: 12px;
     word-wrap: break-word;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 /* User messages (Right aligned, Blue) */
@@ -27,6 +45,7 @@
     background-color: #007bff;
     color: white;
     text-align: right;
+    flex-direction: row-reverse; /* Avatar on right */
 }
 
 /* Bot messages (Left aligned, Gray) */
@@ -44,11 +63,15 @@
     max-width: 100%;
 }
 
+/* Chat Avatars */
+.avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
 /* Follow-up question buttons */
 .followup-questions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
     margin-top: 10px;
 }
 
@@ -65,12 +88,3 @@
     background-color: #495057;
 }
 
-/* Smooth scrolling */
-.chat-container::-webkit-scrollbar {
-    width: 5px;
-}
-
-.chat-container::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 5px;
-}

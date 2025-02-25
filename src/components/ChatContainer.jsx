@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import './ChatContainer.css'; // Import styles
+import userAvatar from '../assets/user-avatar.png'; // User avatar
+import botAvatar from '../assets/bot-avatar.png'; // Bot avatar
 
 const ChatContainer = ({ chatHistory, setQuery }) => {
     const chatEndRef = useRef(null);
@@ -19,6 +21,13 @@ const ChatContainer = ({ chatHistory, setQuery }) => {
         <div className="chat-container">
             {chatHistory.map((chat, index) => (
                 <div key={index} className={`chat-message ${chat.isUser ? 'user' : 'bot'}`}>
+                    {/* Chat Avatar */}
+                    <img 
+                        src={chat.isUser ? userAvatar : botAvatar} 
+                        alt={chat.isUser ? "User Avatar" : "Bot Avatar"} 
+                        className="avatar"
+                    />
+                    
                     <div className="message-bubble">
                         <ReactMarkdown>{chat.text}</ReactMarkdown>
                     </div>
