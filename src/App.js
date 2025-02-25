@@ -31,6 +31,7 @@ function App() {
             {/* Pass isSidebarOpen as a prop */}
             <Navbar onSearch={(query) => setQuery(query)} isSidebarOpen={isSidebarOpen} />
             <Sidebar setQuery={setQuery} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+            
            
 
             
