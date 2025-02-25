@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react'; 
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import SearchBar from './components/SearchBar';
@@ -9,6 +9,13 @@ import './assets/panel.css';
 function App() {
     const [query, setQuery] = useState(""); // Track user input
     const [chatHistory, setChatHistory] = useState([]); // Store chat history
+
+    // Add welcome message when the app loads
+    useEffect(() => {
+        setChatHistory([
+            { text: "Hello! How can I help you today? 😊", isUser: false }
+        ]);
+    }, []);
 
     return (
         <div>
