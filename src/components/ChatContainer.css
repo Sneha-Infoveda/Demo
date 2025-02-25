@@ -1,36 +1,23 @@
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
+/* Chat container */
 .chat-container {
     display: flex;
     flex-direction: column;
-    width: 100%; /* Full width */
-    max-width: 1200px; /* Ensures it stretches */
-    margin: 0 auto; /* Center properly */
-    padding: 20px;
-    height: 70vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    height: 80vh;
     overflow-y: auto;
-    scrollbar-width: thin;
-
-    /* REMOVE BACKGROUND, BORDERS & SHADOWS */
-    background-color: transparent !important;
-    box-shadow: none !important;
-    border-radius: 0px !important;
+    scrollbar-width: none;
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0px;
+    max-width: 830px;
 }
 
-/* Fix Chat Messages */
+/* Chat message structure */
 .chat-message {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
     max-width: 75%;
     margin: 5px;
     padding: 10px;
@@ -39,19 +26,24 @@
     animation: fadeIn 0.3s ease-in-out;
 }
 
+/* Name (Seeker & ChatVeda) */
+.message-sender {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
 /* User messages (Right aligned, Blue) */
 .chat-message.user {
     align-self: flex-end;
-    background-color: #007bff;
-    color: white;
-    text-align: right;
-    flex-direction: row-reverse; /* Avatar on right */
+    background-color: #e9ecef;
+    color: black;
+    text-align: left;
 }
 
 /* Bot messages (Left aligned, Gray) */
 .chat-message.bot {
     align-self: flex-start;
-    background-color: #e9ecef;
+    /* background-color: #e9ecef; */
     color: black;
     text-align: left;
 }
@@ -63,16 +55,20 @@
     max-width: 100%;
 }
 
-/* Chat Avatars */
-.avatar {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
+/* Justify AI response text inside message bubbles */
+.chat-message.bot .message-bubble {
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 /* Follow-up question buttons */
 .followup-questions {
     margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+    gap: 1px;
 }
 
 .followup-questions button {
@@ -88,3 +84,15 @@
     background-color: #495057;
 }
 
+/* Responsive - Center Messages on Mobile Screens */
+@media screen and (max-width: 768px) {
+    .chat-message.user,
+    .chat-message.bot {
+        align-self: center;
+        /* max-width: 100%; */
+    }
+
+    .chat-message .message-bubble {
+        text-align: left;
+    }
+}

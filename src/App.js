@@ -11,13 +11,13 @@ function App() {
     const [query, setQuery] = useState(""); // Track user input
     const [chatHistory, setChatHistory] = useState([]); // Store chat history
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Track sidebar state
-
-    // Add welcome message when the app loads
+    const [showWelcome, setShowWelcome] = useState(true); // Welcome message state
+    // Hide welcome message when user sends a message
     useEffect(() => {
-        setChatHistory([
-            { text: "Hello! How can I help you today? 😊", isUser: false }
-        ]);
-    }, []);
+        if (chatHistory.length > 0) {
+            setShowWelcome(false);
+        }
+    }, [chatHistory]);
 
     // Close sidebar when clicking outside
     const handleContentClick = () => {
@@ -31,11 +31,16 @@ function App() {
             {/* Pass isSidebarOpen as a prop */}
             <Navbar onSearch={(query) => setQuery(query)} isSidebarOpen={isSidebarOpen} />
             <Sidebar setQuery={setQuery} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-            
-           
-
-            
-            {/* Main Content */}
+	    {/* Display Welcome Message Before Chat Starts */}
+            {showWelcome && (
+                <div className="welcome-message">
+                    <h2>
+                        ॐ असतो मा सद्गमय। तमसो मा ज्योतिर्गमय। मृत्योर्मा अमृतं गमय।
+                        <span role="img" aria-label="smile">🙏</span>
+                    </h2>
+                </div>
+            )}
+	    {/* Main Content */}
             <div className="main-content" onClick={handleContentClick}>
                 <SearchBar query={query} setQuery={setQuery} setChatHistory={setChatHistory} />
                 <ChatContainer chatHistory={chatHistory} setQuery={setQuery} />
