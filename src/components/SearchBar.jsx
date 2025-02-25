@@ -1,24 +1,31 @@
-import React, { useState } from 'react';
-import './SearchBar.css'; // Import styles
+import React, { useState, useEffect } from 'react';
+import './SearchBar.css'; 
 
 const SearchBar = ({ query, setQuery, setChatHistory }) => {
-    const [loading, setLoading] = useState(false); // Show loading state
+    const [loading, setLoading] = useState(false);
+
+    // Automatically trigger search when query changes
+    useEffect(() => {
+        if (query) {
+            handleSearch();
+        }
+    }, [query]);
 
     const handleSearch = async () => {
-        if (!query.trim()) return; // Prevent empty requests
+        if (!query.trim()) return;
         setLoading(true);
 
         // Add user message to chat history
         setChatHistory(prevChat => [
             ...prevChat,
-            { text: query, isUser: true } // User message
+            { text: query, isUser: true }
         ]);
 
         try {
             const res = await fetch("http://127.0.0.1:5000/get_answer", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ question: query }) // Send question to Flask
+                body: JSON.stringify({ question: query })
             });
 
             const data = await res.json();

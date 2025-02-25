@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 
-const Navbar = () => {
+const Navbar = ({ onSearch }) => {
     const [openDropdown, setOpenDropdown] = useState(null);
 
     const toggleDropdown = (dropdown) => {
         setOpenDropdown(openDropdown === dropdown ? null : dropdown);
     };
 
+    const handleItemClick = (text) => {
+        if (onSearch) {
+            onSearch(text); // Send clicked text to App.js
+        }
+    };
+
     return (
         <nav className="navbar">
+              <img src="/logocropped.jpg" alt="ChatVeda AI Logo" className="logo" />
+
             <ul className="nav-menu">
                 <li className="nav-item">
                     <button className="nav-button" onClick={() => toggleDropdown('education')}>
@@ -16,9 +24,9 @@ const Navbar = () => {
                     </button>
                     {openDropdown === 'education' && (
                         <ul className="dropdown">
-                            <li><a href="#">History of Education</a></li>
-                            <li><a href="#">Modern Education System</a></li>
-                            <li><a href="#">Vedic Education</a></li>
+                            <li><button onClick={() => handleItemClick('History of Education')}>History of Education</button></li>
+                            <li><button onClick={() => handleItemClick('Modern Education System')}>Modern Education System</button></li>
+                            <li><button onClick={() => handleItemClick('Vedic Education')}>Vedic Education</button></li>
                         </ul>
                     )}
                 </li>
@@ -28,8 +36,8 @@ const Navbar = () => {
                     </button>
                     {openDropdown === 'religious' && (
                         <ul className="dropdown">
-                            <li><a href="#">Hinduism</a></li>
-                            <li><a href="#">Buddhism</a></li>
+                            <li><button onClick={() => handleItemClick('Hinduism')}>Hinduism</button></li>
+                            <li><button onClick={() => handleItemClick('Buddhism')}>Buddhism</button></li>
                         </ul>
                     )}
                 </li>
@@ -39,8 +47,8 @@ const Navbar = () => {
                     </button>
                     {openDropdown === 'history' && (
                         <ul className="dropdown">
-                            <li><a href="#">Ancient History</a></li>
-                            <li><a href="#">Medieval History</a></li>
+                            <li><button onClick={() => handleItemClick('Ancient History')}>Ancient History</button></li>
+                            <li><button onClick={() => handleItemClick('Medieval History')}>Medieval History</button></li>
                         </ul>
                     )}
                 </li>
