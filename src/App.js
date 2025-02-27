@@ -12,6 +12,7 @@ function App() {
     const [chatHistory, setChatHistory] = useState([]); // Store chat history
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Track sidebar state
     const [showWelcome, setShowWelcome] = useState(true); // Welcome message state
+
     // Hide welcome message when user sends a message
     useEffect(() => {
         if (chatHistory.length > 0) {
@@ -27,11 +28,12 @@ function App() {
     };
 
     return (
-        <div className={`app-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+        <div className={`app-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
             {/* Pass isSidebarOpen as a prop */}
             <Navbar onSearch={(query) => setQuery(query)} isSidebarOpen={isSidebarOpen} />
             <Sidebar setQuery={setQuery} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-	    {/* Display Welcome Message Before Chat Starts */}
+            
+            {/* Display Welcome Message Before Chat Starts */}
             {showWelcome && (
                 <div className="welcome-message">
                     <h2>
@@ -40,7 +42,8 @@ function App() {
                     </h2>
                 </div>
             )}
-	    {/* Main Content */}
+            
+            {/* Main Content */}
             <div className="main-content" onClick={handleContentClick}>
                 <SearchBar query={query} setQuery={setQuery} setChatHistory={setChatHistory} />
                 <ChatContainer chatHistory={chatHistory} setQuery={setQuery} />

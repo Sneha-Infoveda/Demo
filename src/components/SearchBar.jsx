@@ -1,15 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './SearchBar.css'; 
 
 const SearchBar = ({ query, setQuery, setChatHistory }) => {
     const [loading, setLoading] = useState(false);
-
-    // Automatically trigger search when query changes
-    useEffect(() => {
-        if (query) {
-            handleSearch();
-        }
-    }, [query]);
 
     const handleSearch = async () => {
         if (!query.trim()) return;
@@ -44,13 +37,21 @@ const SearchBar = ({ query, setQuery, setChatHistory }) => {
         }
     };
 
+    // Trigger search on Enter key press
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     return (
         <div className="search-bar">
             <input 
                 type="text" 
                 value={query} 
                 onChange={(e) => setQuery(e.target.value)} 
-                placeholder="Type a message..."
+                onKeyPress={handleKeyPress} // Detect Enter key
+                placeholder="Type a message and press Enter..."
             />
             <button onClick={handleSearch} disabled={loading}>
                 {loading ? "Thinking..." : <i className="fas fa-paper-plane"></i>}
