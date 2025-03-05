@@ -11,8 +11,10 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # OpenAI API key
-# os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "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"
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+
 
 @app.route('/')
 def home():
@@ -98,10 +100,12 @@ def ask_question():
     """Handles user queries and returns an AI response."""
     data = request.json
     user_question = data.get("question", "")
-    session_id = data.get("session_id", "new")  
+    session_id = data.get("session_id", "new")
+    language = data.get("language", "en")
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
 
+    language_prompt = f"{user_question} Please translate in {language}"
     # Use an existing thread if session_id is provided, else create a new thread
     if session_id in active_threads:
         thread_id = active_threads[session_id]
@@ -114,7 +118,7 @@ def ask_question():
     client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
-        content=user_question
+        content=language_prompt
     )
 
     # Run the assistant

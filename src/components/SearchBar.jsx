@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './SearchBar.css'; 
+import './SearchBar.css';
 
-const SearchBar = ({ query, setQuery, setChatHistory }) => {
+const SearchBar = ({ query, setQuery, setChatHistory, language, setLanguage }) => {
     const [loading, setLoading] = useState(false);
 
     const handleSearch = async () => {
@@ -15,10 +15,10 @@ const SearchBar = ({ query, setQuery, setChatHistory }) => {
         ]);
 
         try {
-            const res = await fetch("http://127.0.0.1:5000/get_answer", {
+            const res = await fetch("https://chatveda.onrender.com/get_answer", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ question: query })
+                body: JSON.stringify({ question: query, language }) // Send selected language
             });
 
             const data = await res.json();
@@ -51,11 +51,22 @@ const SearchBar = ({ query, setQuery, setChatHistory }) => {
                 value={query} 
                 onChange={(e) => setQuery(e.target.value)} 
                 onKeyPress={handleKeyPress} // Detect Enter key
-                placeholder="Type a message and press Enter..."
+                placeholder="Ask anything..."
             />
             <button onClick={handleSearch} disabled={loading}>
-                {loading ? "Thinking..." : <i className="fas fa-paper-plane"></i>}
+                {loading ? ". . ." : <i className="fas fa-paper-plane"></i>}
             </button>
+
+            {/* Language Selection Dropdown */}
+            <select
+                id="language-select"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+            >
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="mr">Marathi</option>
+            </select>
         </div>
     );
 };
