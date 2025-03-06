@@ -15,7 +15,7 @@
     overflow-y: auto;
 }
 .chat-container {
-    max-height: 800px; /* Set a proper height for scrolling */
+    max-height: 600px; /* Set a proper height for scrolling */
     overflow-y: auto; /* Enable vertical scrolling */
   
     scroll-behavior: smooth; /* Smooth scrolling */
@@ -105,6 +105,7 @@
     margin: 5px 0; /* Remove large spacing */
 }
 
+
 /* Buttons inside bot messages */
 .chat-message.bot button {
     width: 100%; /* Make buttons take full width */
@@ -114,14 +115,24 @@
 
 
 /* Message Bubble */
-.message-bubble {
+/* .message-bubble {
     padding: 10px;
     border-radius: 10px;
     max-width: 100%;
     margin-top: -18px;
    
    
+} */
+
+.message-bubble {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 100%; /* Default for mobile */
+    margin-top: -18px;
 }
+
+/* Adjust width for larger screens (laptops, desktops) */
+
 
 /* Justify AI response text inside message bubbles */
 .chat-message.bot .message-bubble {
@@ -167,5 +178,24 @@
 @media screen and (max-width: 768px) {
     .chat-message {
         max-width: 80%;
+    }
+}
+
+
+@media (min-width: 1024px) {
+    .message-sender {
+        display: flex;
+        flex-direction: row;
+        align-items: center; /* Align in a row */
+        gap: 10px; /* Add spacing between Seeker and ChatVeda */
+    }
+
+    .chat-message {
+        max-width: 60%; /* Reduce width for larger screens */
+    }
+
+    .chat-container {
+        max-width: 1000px; /* Ensure chat container fits well on laptop screens */
+        padding: 20px; /* Adjust padding */
     }
 }

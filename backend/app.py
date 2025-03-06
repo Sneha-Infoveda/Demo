@@ -185,7 +185,7 @@ def add_files():
 
     # Update vector store
     updated_vector_store = client.beta.vector_stores.update(
-        vector_store_id="vs_67b0a3af426c81919b944df29f27d7c2",
+        vector_store_id="vs_67c9426fdc3481919db8101d9018d206",
         file_ids=file_ids  # Add new file IDs to the existing vector store
     )
 

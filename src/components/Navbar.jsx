@@ -24,9 +24,15 @@ const Navbar = ({ onSearch }) => {
                         </button>
                         {openDropdown === 'education' && (
                             <ul className="dropdown">
-                                <li><button onClick={() => handleItemClick('History of Education')}>History of Education</button></li>
-                                <li><button onClick={() => handleItemClick('Modern Education System')}>Modern Education System</button></li>
-                                <li><button onClick={() => handleItemClick('Vedic Education')}>Vedic Education</button></li>
+                                <li><button onClick={() => handleItemClick('Atharveda')}>Atharveda</button></li>
+                                <li><button onClick={() => handleItemClick('Samveda')}>Samveda</button></li>
+                                <li><button onClick={() => handleItemClick('Yajurveda')}>Yajurveda</button></li>
+                                <li><button onClick={() => handleItemClick('Rigveda')}>Rigveda</button></li>
+                                <li><button onClick={() => handleItemClick('Shivpuran')}>Shivpuran</button></li>
+                                <li><button onClick={() => handleItemClick('Agnipuran')}>Agnipuran</button></li>
+                                <li><button onClick={() => handleItemClick('Garudpuran')}>Garudpuran</button></li>
+                                <li><button onClick={() => handleItemClick('Brahmapuran')}>Brahmapuran</button></li>
+                                <li><button onClick={() => handleItemClick('Bhagvat Puran')}>Bhagvat Puran</button></li>
                             </ul>
                         )}
                     </li>
@@ -36,8 +42,8 @@ const Navbar = ({ onSearch }) => {
                         </button>
                         {openDropdown === 'religious' && (
                             <ul className="dropdown">
-                                <li><button onClick={() => handleItemClick('Hinduism')}>Hinduism</button></li>
-                                <li><button onClick={() => handleItemClick('Buddhism')}>Buddhism</button></li>
+                                <li><button onClick={() => handleItemClick('Bhagvad Gita')}>Bhagvad Gita</button></li>
+                                <li><button onClick={() => handleItemClick('Ram charit Manas')}>Ram charit Manas</button></li>
                             </ul>
                         )}
                     </li>
@@ -47,8 +53,8 @@ const Navbar = ({ onSearch }) => {
                         </button>
                         {openDropdown === 'history' && (
                             <ul className="dropdown">
-                                <li><button onClick={() => handleItemClick('Ancient History')}>Ancient History</button></li>
-                                <li><button onClick={() => handleItemClick('Medieval History')}>Medieval History</button></li>
+                                <li><button onClick={() => handleItemClick('Ramayana')}>Ramayana</button></li>
+                                <li><button onClick={() => handleItemClick('Mahabharta')}>Mahabharta</button></li>
                             </ul>
                         )}
                     </li>

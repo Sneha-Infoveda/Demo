@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import './ChatContainer.css'; // Import styles
+import React, { useEffect, useRef } from "react";
+import "./ChatContainer.css"; // Import styles
 
-const ChatContainer = ({ chatHistory, setQuery }) => {
+const ChatContainer = ({ chatHistory, isGenerating, setQuery }) => {
     const chatContainerRef = useRef(null);
 
     // Auto-scroll to the bottom when chat updates
@@ -11,7 +11,7 @@ const ChatContainer = ({ chatHistory, setQuery }) => {
                 chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
             }, 100); // Small delay ensures DOM is updated
         }
-    }, [chatHistory]);
+    }, [chatHistory, isGenerating]);
 
     // Hide chat container if no messages
     if (!chatHistory || chatHistory.length === 0) return null;
@@ -19,17 +19,9 @@ const ChatContainer = ({ chatHistory, setQuery }) => {
     return (
         <div className="chat-container" ref={chatContainerRef}>
             {chatHistory.map((chat, index) => (
-                <div key={index} className={`chat-message ${chat.isUser ? 'user' : 'bot'}`}>
-                    
-                    {/* Display the name instead of avatar */}
-                    <p className="message-sender">
-                        {chat.isUser ? "Seeker" : "ChatVeda"}
-                    </p>
-
-                    {/* Chat Message */}
+                <div key={index} className={`chat-message ${chat.isUser ? "user" : "bot"}`}>
+                    <p className="message-sender">{chat.isUser ? "Seeker" : "ChatVeda"}</p>
                     <div className="message-bubble" dangerouslySetInnerHTML={{ __html: chat.text }} />
-
-                    {/* Display follow-up questions only for bot responses */}
                     {!chat.isUser && chat.followUpQuestions?.length > 0 && (
                         <div className="followup-questions">
                             {chat.followUpQuestions.map((q, i) => (
@@ -41,6 +33,14 @@ const ChatContainer = ({ chatHistory, setQuery }) => {
                     )}
                 </div>
             ))}
+
+            {/* ✅ Show "Generating answer..." message when waiting for response */}
+            {isGenerating && (
+                <div className="chat-message bot">
+                    <p className="message-sender">ChatVeda</p>
+                    <div className="message-bubble">Generating answer, please wait...</div>
+                </div>
+            )}
         </div>
     );
 };
