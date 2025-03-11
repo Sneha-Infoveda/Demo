@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    width: 100%;
+    width: 120%;
     max-width: 1000px;
     margin: 0 auto;
     padding: 10px;
@@ -12,6 +12,7 @@
     overflow-y: auto; /* Enable scrolling */
     position: relative;
     box-sizing: border-box;
+    margin-top: 30px;
 }
 
 /* Ensure messages appear at the bottom */
@@ -35,7 +36,7 @@
     margin: 8px 0;
     padding: 12px;
     border-radius: 10px;
-    text-align: justify;
+    text-align: left;
     word-wrap: break-word;
 }
 
@@ -62,100 +63,50 @@
     padding-left: 10px;
 }
 
+/* Follow-up Questions */
 .followup-questions {
     display: flex;
-    flex-direction: column; /* Stack buttons vertically */
-    align-items: flex-start; /* Align buttons to the left */
+    flex-direction: column;
+    align-items: flex-start;
     margin-bottom: 10px;
 }
 
 .followup-questions button {
-    width: 100%; /* Make button full width */
-    text-align: left; /* Align text to the left */
+    width: 100%;
+    text-align: left;
     background-color: white;
     border: none;
     padding: 8px 12px;
     margin: 4px 0;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* 🔥 When hovering over the button, change color and add glow effect */
 .followup-questions button:hover {
-   
-    color: blue; /* Change text color */
-    box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.8); /* Add glowing effect */
+    color: blue;
+    box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.8);
 }
 
-/* 🔥 When clicking the button, add a deeper color */
 .followup-questions button:active {
     color: #0056b3;
 }
 
-/* In ChatContainer.css or your global styles */
+/* Chat message sender name */
 .chat-message.bot .message-sender {
     font-weight: bold;
-  }
-  
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .chat-container {
-        height: calc(95vh - 140px);
-        width: 110%;
-        top: 90px;
-    }
-
-    .chat-message {
-        max-width: 200%;
-    }
 }
 
-/* ✅ Fix for iPhones with Notches */
-@media (max-width: 430px) and (max-height: 932px) {
-    .chat-container {
-        height: calc(90vh - env(safe-area-inset-bottom) - 140px);
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-}
-
-@media only screen
-  and (device-width: 393px)
-  and (device-height: 852px)
-  and (-webkit-device-pixel-ratio: 3) {
-  
-  /* Example: Adjust chat container styles for iPhone 15 Pro */
-  .chat-container {
-    /* Put your custom styles here */
-    /* For instance: */
-    max-height: 80vh;   /* or something that fits your layout */
-    padding: 1rem;
-    overflow-y: auto;
-  }
-  
-  /* You can also style other elements if needed */
-  .some-other-class {
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 768px) {
-    .chat-container {
-        height: 60vh;
-        width: 90%;
-        padding: 15px;
-        height: calc(93vh - 120px); /* Adjust height dynamically for small screens */
-    }
-    
-    .message {
-        font-size: 0.9rem;
-        padding: 8px;
-    }
-}
+/* Voice Assistant Wrapper */
 .voice-assistant-wrapper {
     margin-top: 5px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: flex-end;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
 }
 
 .voice-btn {
@@ -163,13 +114,14 @@
     color: white;
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-bottom: 30px;
 }
 
 .voice-btn:hover {
@@ -178,4 +130,45 @@
 
 .voice-btn:active {
     background-color: #003d80;
+}
+
+/* Responsive Design for Mobile Devices */
+@media (max-width: 768px) {
+    .chat-container {
+        height: calc(95vh - 140px);
+        width: 100%; /* Fit to screen width */
+        padding: 15px;
+    }
+
+    .voice-assistant-wrapper {
+        bottom: 20px;
+        right: 15px;
+    }
+
+    .voice-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .chat-message {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-container {
+        height: calc(90vh - 120px);
+        width: 100%; /* Full width */
+        padding: 10px;
+    }
+
+    .voice-assistant-wrapper {
+        bottom: 15px;
+        right: 10px;
+    }
+
+    .voice-btn {
+        width: 35px;
+        height: 35px;
+    }
 }

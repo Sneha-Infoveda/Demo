@@ -6,6 +6,8 @@ import ChatContainer from './components/ChatContainer';
 import './assets/styles.css';    // Your global styles
 import './assets/panel.css';     // Your sidebar panel styles
 
+
+
 function App() {
     const [query, setQuery] = useState("");
     const [chatHistory, setChatHistory] = useState([]);   // Stores the conversation
@@ -130,6 +132,9 @@ function App() {
                     query={query}
                     setQuery={setQuery}
                     sendMessage={sendMessage}
+                    chatHistory={chatHistory}        // Add this line
+                    setChatHistory={setChatHistory}  // Add this line
+                    
                     language={language}
                     setLanguage={setLanguage}
                     setIsGenerating={setIsGenerating}

@@ -602,35 +602,3 @@ header {
     }
 }
 
-.toggle-voice-button {
-    margin-left: 5px;
-    background-color: #555;
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.toggle-voice-button:hover {
-    background-color: #333;
-}
-.voice-button {
-    margin-left: 5px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.voice-button:hover {
-    background-color: #0056b3;
-}
-
-.voice-button.recording {
-    background-color: red;
-}
