@@ -7,26 +7,24 @@ from openai import OpenAI
 import markdown
 from flask_cors import CORS  # Allows cross-origin requests from React
 
-# NEW: Import SocketIO
+# NEW: Import SocketIO for real-time communication
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-# NEW: Initialize SocketIO with CORS
+# Load the OpenAI API key from environment variables.
+# Make sure the environment variable OPENAI_API_KEY is set externally.
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# NEW: Initialize SocketIO with CORS allowed for all origins.
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# OpenAI API key
-<<<<<<< HEAD
-os.environ["OPENAI_API_KEY"] = ""
-=======
-# os.environ["OPENAI_API_KEY"] = "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"
->>>>>>> e5fdea2ca2c856368bcd47d6d6aa82ff6e91960c
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @app.route('/')
 def home():
     return jsonify({"message": "Welcome to ChatVeda AI Backend!"})
+
 
 def extract_follow_up_questions(full_response):
     """
@@ -56,6 +54,7 @@ def extract_follow_up_questions(full_response):
 
     return response_text, follow_up_questions
 
+
 # function for formatting api response
 def format_text(response_text):
     """
@@ -71,6 +70,7 @@ def format_text(response_text):
     text = re.sub(r"```[a-zA-Z]*", "", html_output)  # Remove markdown-style code block indicators
     text = text.strip()  # Remove leading/trailing spaces
     return text
+
 
 @app.route('/get_answer_mock', methods=['POST'])
 def get_mock_response():
@@ -94,8 +94,10 @@ def get_mock_response():
 
     return jsonify(mock_response)
 
+
 # Store ongoing conversations (thread tracking)
 active_threads = {}
+
 
 @app.route('/get_answer', methods=['POST'])
 def ask_question():
@@ -104,7 +106,6 @@ def ask_question():
     user_question = data.get("question", "")
     session_id = data.get("session_id", "new")
     language = data.get("language", "en")
-
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
 
@@ -138,6 +139,7 @@ def ask_question():
 
     # Retrieve assistant response
     messages = client.beta.threads.messages.list(thread_id=thread_id)
+
     if messages.data:
         full_response = messages.data[0].content[0].text.value
     else:
@@ -157,6 +159,7 @@ def ask_question():
         "session_id": session_id
     })
 
+
 @app.route('/update_instructions', methods=['POST'])
 def update_instructions():
     """Updates the assistant's instructions dynamically."""
@@ -171,12 +174,10 @@ def update_instructions():
             assistant_id="asst_Esyu2T2quwRAgOvkOmfIOcro",
             instructions=new_instructions
         )
-        return jsonify({
-            "message": "Instructions updated successfully", 
-            "assistant_id": updated_assistant.id
-        })
+        return jsonify({"message": "Instructions updated successfully", "assistant_id": updated_assistant.id})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @app.route('/add_files', methods=['POST'])
 def add_files():
@@ -202,25 +203,24 @@ def add_files():
         "vector_store_id": updated_vector_store.id
     })
 
-# NEW: Socket.IO event handlers
+# Socket.IO event handlers for real-time support (if needed)
 @socketio.on('connect')
 def handle_connect():
     print("Client connected via Socket.IO")
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    print("Client disconnected")
+    print("Client disconnected via Socket.IO")
 
 @socketio.on('stream_message')
 def handle_stream_message(data):
     """
-    Example Socket.IO event to handle real-time messages.
-    `data` is whatever the client sends (e.g. JSON).
+    Example Socket.IO event handler to process streaming messages from the client.
     """
     print("Received stream_message:", data)
-    # Emit a response back to the client
+    # Optionally, broadcast back a message or process it.
     emit('stream_response', {"message": f"Server received: {data}"})
 
-# NEW: Run with socketio.run instead of app.run
+# Use socketio.run to start the app with Socket.IO support
 if __name__ == '__main__':
     socketio.run(app, debug=True)
