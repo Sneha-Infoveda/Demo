@@ -17,7 +17,11 @@ CORS(app)  # Enable CORS for all routes
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # OpenAI API key
+<<<<<<< HEAD
 os.environ["OPENAI_API_KEY"] = ""
+=======
+# os.environ["OPENAI_API_KEY"] = "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"
+>>>>>>> e5fdea2ca2c856368bcd47d6d6aa82ff6e91960c
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @app.route('/')
