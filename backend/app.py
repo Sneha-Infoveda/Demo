@@ -17,7 +17,7 @@ CORS(app)  # Enable CORS for all routes
 # Make sure the environment variable OPENAI_API_KEY is set externally.
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# NEW: Initialize SocketIO with CORS allowed for all origins.
+# Initialize SocketIO with CORS allowed for all origins.
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 
@@ -55,18 +55,13 @@ def extract_follow_up_questions(full_response):
     return response_text, follow_up_questions
 
 
-# function for formatting api response
 def format_text(response_text):
     """
     Converts ChatVeda markdown-styled output into HTML for frontend rendering.
-    
     :param response_text: The ChatVeda output with markdown-style formatting.
     :return: HTML formatted string ready for frontend rendering.
     """
-    # Convert markdown to HTML
     html_output = markdown.markdown(response_text)
-
-    # Remove unwanted markdown or formatting from the response
     text = re.sub(r"```[a-zA-Z]*", "", html_output)  # Remove markdown-style code block indicators
     text = text.strip()  # Remove leading/trailing spaces
     return text
@@ -81,7 +76,6 @@ def get_mock_response():
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
 
-    # Mock response (simulating OpenAI Assistant's formatted response)
     mock_response = {
         "response": f"<b>ChatVeda AI:</b> This is a mock response for your question: <i>{user_question}</i>.",
         "follow_up_questions": [
@@ -91,11 +85,9 @@ def get_mock_response():
         ],
         "session_id": "test_session"
     }
-
     return jsonify(mock_response)
 
 
-# Store ongoing conversations (thread tracking)
 active_threads = {}
 
 
@@ -110,7 +102,6 @@ def ask_question():
         return jsonify({"error": "No question provided"}), 400
 
     language_prompt = f"{user_question} Please translate in {language}"
-    # Use an existing thread if session_id is provided, else create a new thread
     if session_id in active_threads:
         thread_id = active_threads[session_id]
     else:
@@ -118,41 +109,31 @@ def ask_question():
         thread_id = thread.id
         active_threads[session_id] = thread_id  
 
-    # Add user message to the thread
     client.beta.threads.messages.create(
         thread_id=thread_id,
         role="user",
         content=language_prompt
     )
 
-    # Run the assistant
     run = client.beta.threads.runs.create(
         thread_id=thread_id,
         assistant_id="asst_Esyu2T2quwRAgOvkOmfIOcro"
     )
 
-    # Wait for completion
     while run.status in ["queued", "in_progress"]:
         time.sleep(2)
         run = client.beta.threads.runs.retrieve(thread_id=thread_id, run_id=run.id)
         print(f"Run Status: {run.status}")  
 
-    # Retrieve assistant response
     messages = client.beta.threads.messages.list(thread_id=thread_id)
-
     if messages.data:
         full_response = messages.data[0].content[0].text.value
     else:
         full_response = "Error: Assistant did not return a response."
 
-    print("Raw Assistant Response:", full_response)  
-
-    # Extract follow-up questions properly
+    print("Raw Assistant Response:", full_response)
     response_text, follow_up_questions = extract_follow_up_questions(full_response)
-
-    # Apply formatting to response
     formatted_response = format_text(response_text)
-
     return jsonify({
         "response": formatted_response, 
         "follow_up_questions": follow_up_questions, 
@@ -192,7 +173,6 @@ def add_files():
         uploaded_file = client.files.create(file=file, purpose="assistants")
         file_ids.append(uploaded_file.id)
 
-    # Update vector store
     updated_vector_store = client.beta.vector_stores.update(
         vector_store_id="vs_67c9426fdc3481919db8101d9018d206",
         file_ids=file_ids  # Add new file IDs to the existing vector store
@@ -203,14 +183,18 @@ def add_files():
         "vector_store_id": updated_vector_store.id
     })
 
-# Socket.IO event handlers for real-time support (if needed)
+
+# -------------------------------
+# Socket.IO event handlers for real-time support
 @socketio.on('connect')
 def handle_connect():
     print("Client connected via Socket.IO")
 
+
 @socketio.on('disconnect')
 def handle_disconnect():
     print("Client disconnected via Socket.IO")
+
 
 @socketio.on('stream_message')
 def handle_stream_message(data):
@@ -218,9 +202,76 @@ def handle_stream_message(data):
     Example Socket.IO event handler to process streaming messages from the client.
     """
     print("Received stream_message:", data)
-    # Optionally, broadcast back a message or process it.
     emit('stream_response', {"message": f"Server received: {data}"})
 
-# Use socketio.run to start the app with Socket.IO support
+
+# NEW: Socket.IO event handler to stream answers in chunks.
+@socketio.on("get_answer_stream")
+def handle_get_answer_stream(data):
+    """
+    Processes the get_answer request and streams the answer in chunks.
+    This event handler uses your existing logic to generate the answer,
+    then simulates streaming by splitting the answer into chunks.
+    """
+    user_question = data.get("question", "")
+    language = data.get("language", "en")
+    
+    if not user_question:
+        emit("streamingData", {"error": "No question provided"})
+        return
+    
+    language_prompt = f"{user_question} Please translate in {language}"
+    
+    session_id = data.get("session_id", "new")
+    if session_id in active_threads:
+        thread_id = active_threads[session_id]
+    else:
+        thread = client.beta.threads.create()
+        thread_id = thread.id
+        active_threads[session_id] = thread_id
+    
+    client.beta.threads.messages.create(
+        thread_id=thread_id,
+        role="user",
+        content=language_prompt
+    )
+    
+    run = client.beta.threads.runs.create(
+        thread_id=thread_id,
+        assistant_id="asst_Esyu2T2quwRAgOvkOmfIOcro"
+    )
+    
+    # Wait for the answer to be generated (this is your existing synchronous logic)
+    while run.status in ["queued", "in_progress"]:
+        time.sleep(2)
+        run = client.beta.threads.runs.retrieve(thread_id=thread_id, run_id=run.id)
+        print(f"Run Status: {run.status}")
+    
+    messages = client.beta.threads.messages.list(thread_id=thread_id)
+    if messages.data:
+        full_response = messages.data[0].content[0].text.value
+    else:
+        full_response = "Error: Assistant did not return a response."
+    
+    print("Raw Assistant Response:", full_response)
+    
+    response_text, follow_up_questions = extract_follow_up_questions(full_response)
+    formatted_response = format_text(response_text)
+    
+    # Simulate streaming by splitting the formatted response into chunks.
+    generated_chunks = [formatted_response[i:i+50] for i in range(0, len(formatted_response), 50)]
+    
+    for chunk in generated_chunks:
+        socketio.emit("streamingData", chunk)
+        time.sleep(0.1)
+    
+    # Optionally, signal end of stream.
+    socketio.emit("streamingData", "\n[End of answer]")
+    # Optionally, send back the session id as well.
+    emit("streamingComplete", {"session_id": session_id})
+
+
+# -------------------------------
+# Run the app with Socket.IO support
 if __name__ == '__main__':
     socketio.run(app, debug=True)
