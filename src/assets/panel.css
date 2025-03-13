@@ -430,23 +430,9 @@
     border-radius: 30px;
 }
 
-.search-bar button {
-    background: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    /* transition: background 0.3s ease; */
-}
 
-.search-bar button:hover {
-    background: #0056b3;
-}
+
+
 
 
 /* Responsive Design */

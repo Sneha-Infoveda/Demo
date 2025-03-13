@@ -1,88 +1,81 @@
 import React, { useState, useEffect } from "react";
-import { FaMicrophone, FaStop } from "react-icons/fa";
+import { FaVolumeUp, FaStop } from "react-icons/fa";  // Changed icon to speaker
 
 function VoiceAssistant({ textToRead }) {
-    const [isReading, setIsReading] = useState(false);
-    const [voices, setVoices] = useState([]);
+  const [isReading, setIsReading] = useState(false);
+  const [voices, setVoices] = useState([]);
+  const synth = window.speechSynthesis;
 
-    // Load available voices
-    useEffect(() => {
-        const loadVoices = () => {
-            const availableVoices = window.speechSynthesis.getVoices();
-            if (availableVoices.length > 0) {
-                // Filter for only male voices with desired languages
-                const filteredVoices = availableVoices.filter(voice =>
-                    (voice.lang === "en-IN" || voice.lang === "hi-IN" || voice.lang === "mr-IN") &&
-                    !voice.name.toLowerCase().includes("female") // Exclude female voices
-                );
-                setVoices(filteredVoices);
-                console.log("Loaded voices:", filteredVoices);
-            }
-        };
-
-        // Load voices when they change
-        window.speechSynthesis.onvoiceschanged = loadVoices;
-        // Try loading voices immediately as well (in case they are already loaded)
-        loadVoices();
-    }, []);
-
-    // Language detection (basic)
-    const detectLanguage = (text) => {
-        const hindiPattern = /[अ-ह]/;
-        const marathiPattern = /[अ-ह]/; // Marathi also uses Devanagari script
-        if (marathiPattern.test(text)) return "mr-IN";
-        if (hindiPattern.test(text)) return "hi-IN";
-        return "en-IN"; // Default to Indian English
+  // Load available voices
+  useEffect(() => {
+    const loadVoices = () => {
+      const availableVoices = synth.getVoices();
+      if (availableVoices.length > 0) {
+        const filteredVoices = availableVoices
+          .filter((voice) => voice.lang === "en-IN")
+          .sort((a, b) => a.name.localeCompare(b.name));
+        setVoices(filteredVoices);
+        console.log("Loaded voices:", filteredVoices);
+      }
     };
 
-    const toggleReading = () => {
-        const synth = window.speechSynthesis;
+    // Load voices initially
+    loadVoices();
 
-        if (isReading) {
-            synth.cancel(); // Stop reading
-            setIsReading(false);
-        } else if (textToRead) {
-            // Check if voices are loaded
-            if (voices.length === 0) {
-                console.warn("Voices not loaded yet!");
-                return;
-            }
+    // Attach the event listener only once if available
+    if (synth.onvoiceschanged !== undefined) {
+      synth.onvoiceschanged = loadVoices;
+    }
+    // We disable exhaustive-deps because synth is a stable global object.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-            // Strip HTML tags before reading
-            const plainText = textToRead.replace(/<[^>]+>/g, "");
-            const language = detectLanguage(plainText);
+  // Clean and format the text for better pronunciation
+  const cleanText = (text) => {
+    // Create a RegExp using the constructor to avoid unnecessary escapes.
+    // This regex will match any of the following characters: ] [ / \ # @ * ~ ^ _ ` | < > { } ( )
+    const regex = new RegExp("[][\\/\\\\#@*~^_`|<>{}()]", "g");
+    return text
+      .replace(/<[^>]+>/g, "")       // Remove HTML tags
+      .replace(regex, "")            // Remove unnecessary symbols
+      .replace(/(\r\n|\n|\r)/gm, " ") // Replace line breaks with spaces
+      .replace(/[.,!?:;]+/g, ".");    // Normalize punctuation to full stops
+  };
 
-            const utterance = new SpeechSynthesisUtterance(plainText);
-            utterance.lang = language;
+  // Toggle reading function
+  const toggleReading = () => {
+    if (isReading) {
+      synth.cancel(); // Stop speaking
+      setIsReading(false);
+      return;
+    }
 
-            // Adjust parameters for a pleasant male tone
-            utterance.rate = 0.85;
-            utterance.pitch = 1.4;
+    if (textToRead) {
+      const plainText = cleanText(textToRead);
 
-            // Find a preferred male voice based on the language
-            const maleVoice = voices.find(voice => voice.lang === language);
+      const utterance = new SpeechSynthesisUtterance(plainText);
+      utterance.lang = "en-IN"; // Set language to Indian English
+      utterance.rate = 0.95;    // Slightly slower for clarity
+      utterance.pitch = 1.4;
+    
 
-            // Fallback to the first available male voice if no match is found
-            utterance.voice = maleVoice || voices[0];
+      const indianVoice = voices.find((voice) => voice.lang === "en-IN") || voices[0];
+      utterance.voice = indianVoice;
 
-            console.log("Selected voice:", utterance.voice.name);
+      utterance.onend = () => {
+        setIsReading(false);
+      };
 
-            // Handle end of speech to update button state
-            utterance.onend = () => {
-                setIsReading(false);
-            };
+      synth.speak(utterance);
+      setIsReading(true);
+    }
+  };
 
-            // Start reading
-            synth.speak(utterance);
-            setIsReading(true);
-        }
-    };
-
-    return (
-        <button onClick={toggleReading} className="voice-btn">
-            {isReading ? <FaStop size={24} /> : <FaMicrophone size={24} />}
-        </button>
-    );
+  return (
+    <button onClick={toggleReading} className={`voice-btn ${isReading ? "active" : ""}`}>
+      {isReading ? <FaStop size={24} /> : <FaVolumeUp size={24} />}
+    </button>
+  );
 }
 
 export default VoiceAssistant;

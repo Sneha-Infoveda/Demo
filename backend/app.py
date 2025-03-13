@@ -7,21 +7,22 @@ from openai import OpenAI
 import markdown
 from flask_cors import CORS  # Allows cross-origin requests from React
 
+# NEW: Import SocketIO
+from flask_socketio import SocketIO, emit
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
+# NEW: Initialize SocketIO with CORS
+socketio = SocketIO(app, cors_allowed_origins="*")
+
 # OpenAI API key
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = ""
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-
 
 @app.route('/')
 def home():
     return jsonify({"message": "Welcome to ChatVeda AI Backend!"})
-
-
-
 
 def extract_follow_up_questions(full_response):
     """
@@ -51,20 +52,18 @@ def extract_follow_up_questions(full_response):
 
     return response_text, follow_up_questions
 
-
-
 # function for formatting api response
 def format_text(response_text):
     """
     Converts ChatVeda markdown-styled output into HTML for frontend rendering.
     
-    :param text: The ChatVeda output with markdown-style formatting.
+    :param response_text: The ChatVeda output with markdown-style formatting.
     :return: HTML formatted string ready for frontend rendering.
     """
     # Convert markdown to HTML
     html_output = markdown.markdown(response_text)
 
-    """ Remove unwanted markdown or formatting from the response """
+    # Remove unwanted markdown or formatting from the response
     text = re.sub(r"```[a-zA-Z]*", "", html_output)  # Remove markdown-style code block indicators
     text = text.strip()  # Remove leading/trailing spaces
     return text
@@ -80,7 +79,7 @@ def get_mock_response():
 
     # Mock response (simulating OpenAI Assistant's formatted response)
     mock_response = {
-        "response": f"<b>ChatVeda AI:</b> This is a mock response for your question This is a mock response for your questionThis is a mock response for your questionThis is a mock response for your question: <i>{user_question}</i>.",
+        "response": f"<b>ChatVeda AI:</b> This is a mock response for your question: <i>{user_question}</i>.",
         "follow_up_questions": [
             "What are the benefits of Karma Yoga?",
             "Can Karma Yoga help in personal growth?",
@@ -90,7 +89,6 @@ def get_mock_response():
     }
 
     return jsonify(mock_response)
-
 
 # Store ongoing conversations (thread tracking)
 active_threads = {}
@@ -102,6 +100,7 @@ def ask_question():
     user_question = data.get("question", "")
     session_id = data.get("session_id", "new")
     language = data.get("language", "en")
+
     if not user_question:
         return jsonify({"error": "No question provided"}), 400
 
@@ -135,7 +134,6 @@ def ask_question():
 
     # Retrieve assistant response
     messages = client.beta.threads.messages.list(thread_id=thread_id)
-
     if messages.data:
         full_response = messages.data[0].content[0].text.value
     else:
@@ -149,8 +147,11 @@ def ask_question():
     # Apply formatting to response
     formatted_response = format_text(response_text)
 
-    return jsonify({"response": formatted_response, "follow_up_questions": follow_up_questions, "session_id": session_id})
-
+    return jsonify({
+        "response": formatted_response, 
+        "follow_up_questions": follow_up_questions, 
+        "session_id": session_id
+    })
 
 @app.route('/update_instructions', methods=['POST'])
 def update_instructions():
@@ -166,7 +167,10 @@ def update_instructions():
             assistant_id="asst_Esyu2T2quwRAgOvkOmfIOcro",
             instructions=new_instructions
         )
-        return jsonify({"message": "Instructions updated successfully", "assistant_id": updated_assistant.id})
+        return jsonify({
+            "message": "Instructions updated successfully", 
+            "assistant_id": updated_assistant.id
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -189,7 +193,30 @@ def add_files():
         file_ids=file_ids  # Add new file IDs to the existing vector store
     )
 
-    return jsonify({"message": "Files added successfully", "vector_store_id": updated_vector_store.id})
+    return jsonify({
+        "message": "Files added successfully", 
+        "vector_store_id": updated_vector_store.id
+    })
 
+# NEW: Socket.IO event handlers
+@socketio.on('connect')
+def handle_connect():
+    print("Client connected via Socket.IO")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print("Client disconnected")
+
+@socketio.on('stream_message')
+def handle_stream_message(data):
+    """
+    Example Socket.IO event to handle real-time messages.
+    `data` is whatever the client sends (e.g. JSON).
+    """
+    print("Received stream_message:", data)
+    # Emit a response back to the client
+    emit('stream_response', {"message": f"Server received: {data}"})
+
+# NEW: Run with socketio.run instead of app.run
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

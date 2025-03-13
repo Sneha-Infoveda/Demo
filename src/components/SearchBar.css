@@ -23,33 +23,47 @@
 }
 
 .search-bar button {
-    background-color: #007bff;
-    color: white;
+    background-color: transparent; /* Remove gray background */
+    color: black;
     border: none;
-    padding: 10px 15px;
+    padding: 5px; /* Reduced padding for compact size */
     cursor: pointer;
     border-radius: 50%;
+    outline: none;
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    .search-bar button {
+        padding: 3px; /* Further reduce padding on mobile */
+        font-size: 18px; /* Adjust icon size */
+    }
 }
 
 .search-bar button:disabled {
-    background-color: #ccc;
+    color: #ccc;
     cursor: not-allowed;
 }
 
+
 /* Style for Language Dropdown */
 .search-bar select {
-    padding: 10px;
-    font-size: 16px;
+    padding: 8px;
+    font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 20px;
     background-color: white;
     cursor: pointer;
     outline: none;
-    height: 50px;
+    height: 40px;
 }
 
-/* Hover & Focus Effects */
-.search-bar select:hover,
-.search-bar select:focus {
-    border-color: #007bff;
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+    .search-bar select {
+        padding: 5px;
+        font-size: 12px;
+        height: 30px;   /* Reduced height on mobile */
+        border-radius: 15px;
+    }
 }
